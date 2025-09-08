@@ -34,19 +34,20 @@ $$\sigma(x) + \alpha \nabla^2 g(x,t) - \delta t + \lambda (g(x,t))^2 = \partial_
 This is implemented in 1, 2, and 3 dimensions with periodic boundaries. Example:
 
 ```julia
-using ModeCouplingTheory, MCTBetaScaling, Plots
+using ModeCouplingTheory, MCTBetaScaling, Plots, Random
 L_sys = 100.0 ## physical size of the system
 n = 100 ## number of sites on one side of the lattice
 dims = 2 
 Ls = ntuple(i -> L_sys,  dims)  # Lattice size in each dimension
 ns = ntuple(i -> n, dims)  # Number of sites in one dimension of the lattice
-
+Random.seed!(52342)
 λ = 0.75
 α = 0.1
 t₀ = 0.001
 σ0 = 0.05 # target σ
 delta_σ2 = 0.1  # desired variance
 dx = L_sys/n
+
 # small random variations near σ = 0. We divide by dx^2 to get the proper discretization
 σ_vec = [σ0 + delta_σ2/dx^2*randn() for i in 1:prod(ns)]  
 
