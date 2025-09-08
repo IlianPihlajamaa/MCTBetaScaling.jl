@@ -4,7 +4,11 @@ using MCTBetaScaling
 makedocs(
     sitename = "MCTBetaScaling",
     format = Documenter.HTML(),
-    modules = [MCTBetaScaling]
+    modules = [MCTBetaScaling],
+    pages = [
+        "Home" => "index.md",
+        "API" => "API.md",
+    ]
 )
 
 # Documenter can also automatically deploy documentation to gh-pages.

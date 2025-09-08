@@ -1,2 +1,5 @@
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+MCTBetaScaling = "89e7ec30-1fdf-11ee-08a6-c5e7866bad12"
+ModeCouplingTheory = "6cad4188-63cb-4528-a10f-dbb409b456c6"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"

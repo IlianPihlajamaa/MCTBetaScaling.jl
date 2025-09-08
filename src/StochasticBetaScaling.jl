@@ -83,7 +83,7 @@ end
 function Base.show(io::IO, ::MIME"text/plain", p::StochasticBetaScalingEquation)
     println(io, "MCT Stochastic beta-scaling object:")
     println(io, "   σ(x) - δ t + λ (g(x,t))² + α * ∇²g(x,t) = ∂ₜ∫g(x, t-τ)g(x, τ)dτ")
-    println(io, "   λ = $(p.coeffs.λ), α = $(p.coeffs.α), t₀ = $(p.coeffs.t₀), δ = $(p.coeffs.δ)")
+    println(io, "   λ = $(p.coeffs.λ), α = $(p.coeffs.α), t₀ = $(p.coeffs.t₀)")
     println(io, "   L_sys = $(p.coeffs.L_sys), with $(p.ns) sites in each dimension.")
 end
 
