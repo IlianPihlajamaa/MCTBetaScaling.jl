@@ -6,6 +6,19 @@ $$\sigma - \delta t + \lambda (g(t))^2 = \partial_t∫g(t-\tau)g(\tau)d\tau.$$
 
 Here, $\sigma$ is the distance from the critical point, $\lambda$ is the relevant eigenvalue of the stability matrix. $g(t)$ describes the deviation of the order parameter from the plateau. $\delta$ is an optional hopping parameter, defaulting to 0 if not specified. Each of the parameters have to be floating point numbers.  
 
+### Installation
+
+The package is not registered. This means you need to add it from this github repository directly.
+
+```julia
+import Pkg
+Pkg.activate(".") # activate current folder as virtual environment
+Pkg.add("ModeCouplingTheory") # dependency
+Pkg.add("Plots") # plotting
+Pkg.add(url="https://github.com/IlianPihlajamaa/MCTBetaScaling.jl")
+```
+
+This should allow you to run the example code below.
 
 ### Example
 In order to solve the beta-scaling equation, we have to specify the parameters defining the equation and a time-scale `t0` that shifts the results. 
@@ -36,7 +49,7 @@ This is implemented in 1, 2, and 3 dimensions with periodic boundaries. Example:
 ```julia
 using ModeCouplingTheory, MCTBetaScaling, Plots, Random
 L_sys = 100.0 ## physical size of the system
-n = 100 ## number of sites on one side of the lattice
+n = 500 ## number of sites on one side of the lattice
 dims = 2 
 Ls = ntuple(i -> L_sys,  dims)  # Lattice size in each dimension
 ns = ntuple(i -> n, dims)  # Number of sites in each dimension of the lattice
