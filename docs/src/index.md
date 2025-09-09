@@ -39,7 +39,7 @@ L_sys = 100.0 ## physical size of the system
 n = 100 ## number of sites on one side of the lattice
 dims = 2 
 Ls = ntuple(i -> L_sys,  dims)  # Lattice size in each dimension
-ns = ntuple(i -> n, dims)  # Number of sites in one dimension of the lattice
+ns = ntuple(i -> n, dims)  # Number of sites in each dimension of the lattice
 Random.seed!(52342)
 λ = 0.75
 α = 0.1
@@ -48,7 +48,8 @@ t₀ = 0.001
 delta_σ2 = 0.1  # desired variance
 dx = L_sys/n
 
-# small random variations near σ = 0. We divide by dx^2 to get the proper discretization
+# small random variations near σ = 0. 
+# We divide by dx^2 to get the proper discretization of the delta function
 σ_vec = [σ0 + delta_σ2/dx^2*randn() for i in 1:prod(ns)]  
 
 eqn_sys = MCTBetaScaling.StochasticBetaScalingEquation(λ, α, σ_vec, t₀, Ls, ns)
@@ -62,3 +63,22 @@ end
 display(p)
 ```
 ![image](images/SBR.png)
+
+
+We can make a heatmap for different values of `t` to show the progression of the beta-relaxation.
+
+```julia
+t = get_t(sol)
+Nt = length(t)
+F = F = get_F(sol, :, :) |> stack; # gives a matrix of n^3 x Nt
+F = reshape(F, (n,n,Nt)); # array of (n,n,Nt)
+
+ps = []
+for ti = 10.0 .^ (-1:10)
+    it = findfirst(x -> x>ti, t)
+    pi = heatmap(clamp.(-F[:, :, it], -1, 1), colorbar=false, title="t = $ti")
+    push!(ps, pi)
+end
+plot(ps..., size=(1000,1000))
+```
+![image](images/SBRhm.png)
