@@ -9,7 +9,7 @@ L_sys = 100.0 ## physical size of the system
 n = 100 ## number of sites on one side of the lattice
 dims = 2 
 Ls = ntuple(i -&gt; L_sys,  dims)  # Lattice size in each dimension
-ns = ntuple(i -&gt; n, dims)  # Number of sites in one dimension of the lattice
+ns = ntuple(i -&gt; n, dims)  # Number of sites in each dimension of the lattice
 Random.seed!(52342)
 λ = 0.75
 α = 0.1
@@ -18,7 +18,8 @@ t₀ = 0.001
 delta_σ2 = 0.1  # desired variance
 dx = L_sys/n
 
-# small random variations near σ = 0. We divide by dx^2 to get the proper discretization
+# small random variations near σ = 0. 
+# We divide by dx^2 to get the proper discretization of the delta function
 σ_vec = [σ0 + delta_σ2/dx^2*randn() for i in 1:prod(ns)]  
 
 eqn_sys = MCTBetaScaling.StochasticBetaScalingEquation(λ, α, σ_vec, t₀, Ls, ns)
@@ -29,4 +30,15 @@ p = plot(xlabel=&quot;t&quot;, xscale=:log10, yscale=:log10, ylabel=&quot;g(x,t)
 for i in 1:100:length(σ_vec) # plot 100 out of the 10000 curves
     plot!(p, sol.t[2:end], abs.(get_F(sol, 2:length(sol.t), i)), label=nothing)
 end
-display(p)</code></pre><p><img src="images/SBR.png" alt="image"/></p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="API/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Tuesday 9 September 2025 07:48">Tuesday 9 September 2025</span>. Using Julia version 1.11.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+display(p)</code></pre><p><img src="images/SBR.png" alt="image"/></p><p>We can make a heatmap for different values of <code>t</code> to show the progression of the beta-relaxation.</p><pre><code class="language-julia hljs">t = get_t(sol)
+Nt = length(t)
+F = F = get_F(sol, :, :) |&gt; stack; # gives a matrix of n^3 x Nt
+F = reshape(F, (n,n,Nt)); # array of (n,n,Nt)
+
+ps = []
+for ti = 10.0 .^ (-1:10)
+    it = findfirst(x -&gt; x&gt;ti, t)
+    p_i = heatmap(clamp.(-F[:, :, it], -1, 1), colorbar=false, title=&quot;t = $ti&quot;)
+    push!(ps, p_i)
+end
+plot(ps..., size=(1000,1000))</code></pre><p><img src="images/SBR_hm.png" alt="image"/></p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="API/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.14.1 on <span class="colophon-date" title="Tuesday 9 September 2025 09:13">Tuesday 9 September 2025</span>. Using Julia version 1.11.6.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
