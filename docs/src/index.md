@@ -81,4 +81,4 @@ for ti = 10.0 .^ (-1:10)
 end
 plot(ps..., size=(1000,1000))
 ```
-![image](images/SBRhm.png)
+![image](images/SBR_hm.png)
