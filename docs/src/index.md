@@ -49,7 +49,7 @@ This is implemented in 1, 2, and 3 dimensions with periodic boundaries. Example:
 ```julia
 using ModeCouplingTheory, MCTBetaScaling, Plots, Random
 L_sys = 100.0 ## physical size of the system
-n = 500 ## number of sites on one side of the lattice
+n = 100 ## number of sites on one side of the lattice
 dims = 2 
 Ls = ntuple(i -> L_sys,  dims)  # Lattice size in each dimension
 ns = ntuple(i -> n, dims)  # Number of sites in each dimension of the lattice
@@ -58,15 +58,15 @@ Random.seed!(52342)
 α = 0.1
 t₀ = 0.001
 σ0 = 0.05 # target σ
-delta_σ2 = 0.1  # desired variance
+delta_σ = 0.1  # desired standard deviation (sqrt of var)
 dx = L_sys/n
 
 # small random variations near σ = 0. 
-# We divide by dx^2 to get the proper discretization of the delta function
-σ_vec = [σ0 + delta_σ2/dx^2*randn() for i in 1:prod(ns)]  
+# We divide std by dx get the proper discretization of the delta function
+σ_vec = [σ0 + delta_σ/dx*randn() for i in 1:prod(ns)]  
 
 eqn_sys = MCTBetaScaling.StochasticBetaScalingEquation(λ, α, σ_vec, t₀, Ls, ns)
-solver = TimeDoublingSolver(t_max=10^10., verbose=true, tolerance=1e-10, N=16, Δt=1e-5)
+solver = TimeDoublingSolver(t_max=10^10., verbose=true, tolerance=1e-10, N=16, Δt=1e-10)
 sol = solve(eqn_sys, solver)
 
 p = plot(xlabel="t", xscale=:log10, yscale=:log10, ylabel="g(x,t)", xlims=(10^-5, 10^10), ylims=(10^-3, 10^2))
@@ -74,6 +74,7 @@ for i in 1:100:length(σ_vec) # plot 100 out of the 10000 curves
     plot!(p, sol.t[2:end], abs.(get_F(sol, 2:length(sol.t), i)), label=nothing)
 end
 display(p)
+
 ```
 ![image](images/SBR.png)
 
