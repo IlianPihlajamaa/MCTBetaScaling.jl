@@ -76,9 +76,10 @@ F = reshape(F, (n,n,Nt)); # array of (n,n,Nt)
 ps = []
 for ti = 10.0 .^ (-1:10)
     it = findfirst(x -> x>ti, t)
-    p_i = heatmap(clamp.(-F[:, :, it], -1, 1), colorbar=false, title="t = $ti")
+    p_i = heatmap(clamp.(-F[:, :, it], -1, 1), colorbar=false, title="t = $ti", aspect_ratio=1.0)
     push!(ps, p_i)
 end
-plot(ps..., size=(1000,1000))
+p = plot(ps..., size=(1200,900))
+
 ```
 ![image](images/SBR_hm.png)
