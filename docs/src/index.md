@@ -76,8 +76,8 @@ F = reshape(F, (n,n,Nt)); # array of (n,n,Nt)
 ps = []
 for ti = 10.0 .^ (-1:10)
     it = findfirst(x -> x>ti, t)
-    pi = heatmap(clamp.(-F[:, :, it], -1, 1), colorbar=false, title="t = $ti")
-    push!(ps, pi)
+    p_i = heatmap(clamp.(-F[:, :, it], -1, 1), colorbar=false, title="t = $ti")
+    push!(ps, p_i)
 end
 plot(ps..., size=(1000,1000))
 ```
