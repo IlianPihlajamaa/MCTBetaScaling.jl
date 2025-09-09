@@ -57,7 +57,7 @@ sol = solve(eqn_sys, solver)
 
 p = plot(xlabel="t", xscale=:log10, yscale=:log10, ylabel="g(x,t)", xlims=(10^-5, 10^10), ylims=(10^-3, 10^2))
 for i in 1:100:length(σ_vec) # plot 100 out of the 10000 curves
-    plot!(p, sol.t[2:end], get_F(sol, 2:length(sol.t), i), label=nothing)
+    plot!(p, sol.t[2:end], abs.(get_F(sol, 2:length(sol.t), i)), label=nothing)
 end
 display(p)
 ```
